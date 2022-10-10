@@ -12,9 +12,11 @@ public class BoardManager : MonoBehaviour
     public Node nodePrefab;
     public List<List<Node>> rows = new List<List<Node>>();
     public List<List<Node>> columns = new List<List<Node>>();
+    public List<List<Node>> diognals = new List<List<Node>>();
     public List<Node> nodes = new List<Node>();
     public List<Node> rowsTemp = new List<Node>();
     public List<Node> columnTemp = new List<Node>();
+    public List<Node> diognalTemp = new List<Node>();
     public MenuManager menuManager;
 
     public bool gameOver;
@@ -29,6 +31,15 @@ public class BoardManager : MonoBehaviour
         }
         CreateRows();
         CreateColumns();
+        CreateDiognals();
+
+        //for (int i = 0; i < diognals.Count; i++)
+        //{
+        //    for (int r = 0; r < boardSize; r++)
+        //    {
+        //        diognals[i][r].GetComponent<Image>().color = new Color32(0, 255, 255, 255);
+        //    }
+        //}
     }
     void CreateRows()
     {
@@ -58,6 +69,30 @@ public class BoardManager : MonoBehaviour
             columnTemp = new List<Node>();
         }
     }
+    void CreateDiognals()
+    {
+        //Left to Right
+        int indicatorL2R = 0;
+        for (int y = 0; y < boardSize; y++)
+        {
+            diognalTemp.Add(nodes[indicatorL2R]);
+            indicatorL2R += (boardSize + 1);
+        }
+        diognals.Add(diognalTemp);
+        diognalTemp = new List<Node>();
+
+        //Right to Left
+        int indicatorR2L = boardSize - 1;
+        for (int i = 0; i < boardSize; i++)
+        {
+            diognalTemp.Add(nodes[indicatorR2L]);
+            indicatorR2L += (boardSize - 1);
+        }
+        diognals.Add(diognalTemp);
+        diognalTemp = new List<Node>();
+    }
+
+
     public void Calculate()
     {
         if (gameOver)
@@ -66,18 +101,46 @@ public class BoardManager : MonoBehaviour
             menuManager.SetupGameResults();
             return;
         }
+        if (AllSlotsOccupated())
+        {
+            if (gameOver == false)
+            {
+                Debug.Log("its a Tie");
+                menuManager.SetupGameResults();
+                return;
+            }
+        }
+        CheckDiognal();
         CheckRows();
         CheckColumns();
         ChangeShape();
     }
 
+    private bool AllSlotsOccupated()
+    {
+        int counter = 0;
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            if (nodes[i].shape == ShapeType.Shape.None)
+            {
+                counter++;
+            }
+        }
+        if (counter == 0)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
+
     public void ChangeShape()
     {
-        if (currentShape == ShapeType.Shape.O)
-            currentShape = ShapeType.Shape.X;
+        if (currentShape == ShapeType.Shape.Cat)
+            currentShape = ShapeType.Shape.Rabit;
         else
-        if (currentShape == ShapeType.Shape.X)
-            currentShape = ShapeType.Shape.O;
+        if (currentShape == ShapeType.Shape.Rabit)
+            currentShape = ShapeType.Shape.Cat;
     }
 
     public void CheckRows()
@@ -121,6 +184,33 @@ public class BoardManager : MonoBehaviour
                         for (int k = 0; k < boardSize; k++)
                         {
                             columns[x][k].GetComponent<Image>().color = new Color32(0, 255, 255, 255);
+                        }
+                        gameOver = true;
+                        Calculate();
+                        return;
+                    }
+                }
+            }
+            counter = 0;
+        }
+    }
+
+    public void CheckDiognal()
+    {
+        int counter = 0;
+        for (int i = 0; i < diognals.Count; i++)
+        {
+            for (int r = 0; r < boardSize; r++)
+            {
+                if (diognals[i][r].shape == currentShape)
+                {
+                    counter++;
+                    Debug.Log(counter);
+                    if (counter == boardSize)
+                    {
+                        for (int k = 0; k < boardSize; k++)
+                        {
+                            diognals[i][k].GetComponent<Image>().color = new Color32(0, 255, 255, 255);
                         }
                         gameOver = true;
                         Calculate();

@@ -28,13 +28,13 @@ public class MenuManager : MonoBehaviour
     {
         boardManager.gameObject.SetActive(true);
 
-        if (shapeType == "X")
+        if (shapeType == "Cat")
         {
-            boardManager.currentShape = ShapeType.Shape.X;
+            boardManager.currentShape = ShapeType.Shape.Cat;
         }
-        if (shapeType == "O")
+        if (shapeType == "Rabit")
         {
-            boardManager.currentShape = ShapeType.Shape.O;
+            boardManager.currentShape = ShapeType.Shape.Rabit;
         }
 
         selectSignScreen_IMG.gameObject.SetActive(false);

@@ -7,8 +7,8 @@ public static class ShapeType
     public enum Shape
     {
         None,
-        X,
-        O
+        Cat,
+        Rabit
     }
     public static Shape shape;
 }
