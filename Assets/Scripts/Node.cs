@@ -30,7 +30,6 @@ public class Node : MonoBehaviour
         shape = boardManager.currentShape;
         NodeTextChange();
         boardManager.Calculate();
-        //Last
     }
 
     void NodeTextChange()
