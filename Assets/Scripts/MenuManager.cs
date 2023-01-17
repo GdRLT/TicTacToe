@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class MenuManager : MonoBehaviour
 {
@@ -11,11 +12,21 @@ public class MenuManager : MonoBehaviour
     public Image selectSignScreen_IMG;
     public BoardManager boardManager;
     public TextMeshProUGUI winner_TXT;
+    public RectTransform settings_Menu;
+
 
     public void SetupGameResults()
     {
-        resultScreen_IMG.gameObject.SetActive(true);
+        resultScreen_IMG.rectTransform.DOAnchorPos(new Vector2(0, 0), 0.5f);
+        resultScreen_IMG.DOColor(new Color32(160, 160, 255, 150), 1);
         winner_TXT.text = boardManager.currentShape.ToString() + "  is Winner";
+    }
+
+    public void SetupGameResultAsATie()
+    {
+        resultScreen_IMG.rectTransform.DOAnchorPos(new Vector2(0, 0), 0.5f);
+        resultScreen_IMG.DOColor(new Color32(160, 160, 255, 150), 1);
+        winner_TXT.text = "It's a Tie";
     }
 
     public void PlayAgain()
@@ -38,5 +49,18 @@ public class MenuManager : MonoBehaviour
         }
 
         selectSignScreen_IMG.gameObject.SetActive(false);
+    }
+
+
+    //Setting Menu Section
+    bool isSettingMenuShowing;
+    public void ToggleSettings()
+    {
+        isSettingMenuShowing = !isSettingMenuShowing;
+
+        if (isSettingMenuShowing)
+            settings_Menu.DOAnchorPos(new Vector2(0, 0), 0.5f);
+        else
+            settings_Menu.DOAnchorPos(new Vector2(0, 1500), 0.5f);
     }
 }
