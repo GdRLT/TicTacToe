@@ -24,24 +24,22 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
+        CreateNodes();
+        CreateRows();
+        CreateColumns();
+        CreateDiognals();
+    }
+
+    void CreateNodes()
+    {
         GetComponent<GridLayoutGroup>().constraintCount = boardSize;
         for (int i = 0; i < boardSize * boardSize; i++)
         {
             Node node = Instantiate(nodePrefab, gameObject.transform);
             nodes.Add(node);
         }
-        CreateRows();
-        CreateColumns();
-        CreateDiognals();
-
-        //for (int i = 0; i < diognals.Count; i++)
-        //{
-        //    for (int r = 0; r < boardSize; r++)
-        //    {
-        //        diognals[i][r].GetComponent<Image>().color = new Color32(0, 255, 255, 255);
-        //    }
-        //}
     }
+
     void CreateRows()
     {
         int rowCounter = 0;

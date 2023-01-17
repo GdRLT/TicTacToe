@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Node : MonoBehaviour
 {
@@ -19,6 +20,13 @@ public class Node : MonoBehaviour
     {
         shape = ShapeType.Shape.None;
         boardManager = FindObjectOfType<BoardManager>();
+        BirthTween();
+    }
+
+    void BirthTween()
+    {
+        transform.localScale = Vector2.zero;
+        transform.DOScale(1f, 1f);
     }
 
     public void NodeSelected()
@@ -30,6 +38,12 @@ public class Node : MonoBehaviour
         shape = boardManager.currentShape;
         NodeTextChange();
         boardManager.Calculate();
+        ClickTween();
+    }
+
+    void ClickTween()
+    {
+        transform.DOScale(0.8f, 0.1f).OnComplete(()=> transform.DOScale(1f, 0.1f));
     }
 
     void NodeTextChange()
