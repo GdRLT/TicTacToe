@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class BoardManager : MonoBehaviour
 {
@@ -14,9 +15,9 @@ public class BoardManager : MonoBehaviour
     public List<List<Node>> columns = new List<List<Node>>();
     public List<List<Node>> diognals = new List<List<Node>>();
     public List<Node> nodes = new List<Node>();
-    public List<Node> rowsTemp = new List<Node>();
-    public List<Node> columnTemp = new List<Node>();
-    public List<Node> diognalTemp = new List<Node>();
+    [HideInInspector]public List<Node> rowsTemp = new List<Node>();
+    [HideInInspector] public List<Node> columnTemp = new List<Node>();
+    [HideInInspector] public List<Node> diognalTemp = new List<Node>();
     public MenuManager menuManager;
 
     public bool gameOver;
@@ -92,7 +93,6 @@ public class BoardManager : MonoBehaviour
         diognalTemp = new List<Node>();
     }
 
-
     public void Calculate()
     {
         if (gameOver)
@@ -106,7 +106,7 @@ public class BoardManager : MonoBehaviour
             if (gameOver == false)
             {
                 Debug.Log("its a Tie");
-                menuManager.SetupGameResults();
+                menuManager.SetupGameResultAsATie();
                 return;
             }
         }
