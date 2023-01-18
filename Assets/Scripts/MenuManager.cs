@@ -10,11 +10,15 @@ public class MenuManager : MonoBehaviour
 {
     public Image resultScreen_IMG;
     public Image selectSignScreen_IMG;
-    public BoardManager boardManager;
+    public GameObject boardPrefab;
+    [HideInInspector]public BoardManager boardManager;
     public TextMeshProUGUI winner_TXT;
     public RectTransform settings_Menu;
 
-
+    private void OnEnable()
+    {
+        Application.targetFrameRate = 60;
+    }
     public void SetupGameResults()
     {
         resultScreen_IMG.rectTransform.DOAnchorPos(new Vector2(0, 0), 0.5f);
@@ -31,13 +35,23 @@ public class MenuManager : MonoBehaviour
 
     public void PlayAgain()
     {
-        SceneManager.LoadScene(0);
+        resultScreen_IMG.rectTransform.DOAnchorPos(new Vector2(-1500, 0), 0.5f);
+        selectSignScreen_IMG.rectTransform.DOAnchorPos(new Vector2(0, 0), 0.5f);
+
+        // Clear Old Board if Exist
+        DestroyBoard();
+    }
+
+    void DestroyBoard()
+    {
+        Destroy(boardManager.gameObject);
     }
 
     [SerializeField]
     public void SelectSign(string shapeType)
     {
-        boardManager.gameObject.SetActive(true);
+        // Install New Board
+        InstallNewBoard();
 
         if (shapeType == "Cat")
         {
@@ -48,7 +62,16 @@ public class MenuManager : MonoBehaviour
             boardManager.currentShape = ShapeType.Shape.Rabit;
         }
 
-        selectSignScreen_IMG.gameObject.SetActive(false);
+        // Tween Select Sign Screen
+        selectSignScreen_IMG.rectTransform.DOAnchorPos(new Vector2(1000, 0), 0.5f);
+    }
+
+
+    void InstallNewBoard()
+    {
+        var board = Instantiate(boardPrefab);
+        boardManager = board.GetComponent<BoardManager>();
+        boardManager.InstallBoard();
     }
 
 

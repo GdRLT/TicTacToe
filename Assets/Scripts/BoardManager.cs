@@ -15,16 +15,22 @@ public class BoardManager : MonoBehaviour
     public List<List<Node>> columns = new List<List<Node>>();
     public List<List<Node>> diognals = new List<List<Node>>();
     public List<Node> nodes = new List<Node>();
-    [HideInInspector]public List<Node> rowsTemp = new List<Node>();
+    [HideInInspector] public List<Node> rowsTemp = new List<Node>();
     [HideInInspector] public List<Node> columnTemp = new List<Node>();
     [HideInInspector] public List<Node> diognalTemp = new List<Node>();
-    public MenuManager menuManager;
+    [HideInInspector]public MenuManager menuManager;
 
     public bool gameOver;
 
-    private void Start()
+    private void OnEnable()
+    {
+        menuManager = FindObjectOfType<MenuManager>();
+    }
+
+    public void InstallBoard()
     {
         CreateNodes();
+        StartCoroutine(NodesBirthAnimation());
         CreateRows();
         CreateColumns();
         CreateDiognals();
@@ -37,6 +43,14 @@ public class BoardManager : MonoBehaviour
         {
             Node node = Instantiate(nodePrefab, gameObject.transform);
             nodes.Add(node);
+        }
+    }
+    IEnumerator NodesBirthAnimation()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            yield return new WaitForSeconds(0.1f);
+            nodes[i].BirthTween();
         }
     }
 
@@ -95,6 +109,7 @@ public class BoardManager : MonoBehaviour
     {
         if (gameOver)
         {
+
             Debug.Log(currentShape.ToString() + " Wins");
             menuManager.SetupGameResults();
             return;

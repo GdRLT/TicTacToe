@@ -15,25 +15,36 @@ public class Node : MonoBehaviour
     public Image nodeImage;
     public int nodeX;
     public int nodeY;
+    AudioSource audioSource;
+    public AudioClip[] clips;
 
     private void Start()
     {
         shape = ShapeType.Shape.None;
         boardManager = FindObjectOfType<BoardManager>();
-        BirthTween();
+        transform.localScale = Vector2.zero;
+        audioSource = GetComponent<AudioSource>();
     }
 
-    void BirthTween()
+    public void BirthTween()
     {
-        transform.localScale = Vector2.zero;
+        PlaySound(clips[0]);
         transform.DOScale(1f, 1f);
     }
-
+    void PlaySound(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
+    }
     public void NodeSelected()
     {
         if (isPicked)
+        {
+            ErrorTween();
             return;
+        }
 
+        PlaySound(clips[0]);
         isPicked = true;
         shape = boardManager.currentShape;
         NodeTextChange();
@@ -41,6 +52,14 @@ public class Node : MonoBehaviour
         ClickTween();
     }
 
+    void ErrorTween()
+    {
+        GetComponent<Image>().DOColor(new Color32(255, 150, 150, 255), 0.3f)
+    .OnComplete(() => GetComponent<Image>().DOColor(new Color32(255, 255, 255, 255), 0.3f));
+
+        GetComponent<RectTransform>().DOShakePosition(0.5f, 10, 100, 90, false, true, ShakeRandomnessMode.Harmonic);
+        PlaySound(clips[1]);
+    }
     void ClickTween()
     {
         transform.DOScale(0.8f, 0.1f).OnComplete(()=> transform.DOScale(1f, 0.1f));
